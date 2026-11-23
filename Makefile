@@ -108,6 +108,7 @@ CONSOLE_usb_rp2350usba := joypad_usb_rp2350usba
 CONSOLE_bt2usb := joypad_bt2usb
 CONSOLE_mouthpad := joypad_mouthpad
 CONSOLE_bt2loopy := joypad_bt2loopy
+CONSOLE_bt2gameport := joypad_bt2gameport
 CONSOLE_bt2nuon := joypad_bt2nuon
 CONSOLE_bt2n64 := joypad_bt2n64
 CONSOLE_btusb2usb := joypad_btusb2usb
@@ -209,6 +210,8 @@ APP_mouthpad_pico_w := pico_w mouthpad mouthpad_pico_w MouthPad-BLE USB+NUS
 APP_mouthpad_pico2_w := pico2_w mouthpad mouthpad_pico2_w MouthPad-BLE USB+NUS
 APP_bt2usb_waveshare_rp2350b_plus_w := waveshare_rp2350b_plus_w bt2usb bt2usb_waveshare_rp2350b_plus_w Bluetooth USB
 APP_bt2loopy_pico_w := pico_w bt2loopy bt2loopy_pico_w Bluetooth Loopy
+APP_bt2gameport_pico_w := pico_w bt2gameport bt2gameport_pico_w Bluetooth Gameport
+APP_bt2gameport_pico2_w := pico2_w bt2gameport bt2gameport_pico2_w Bluetooth Gameport
 APP_bt2nuon_pico_w := pico_w bt2nuon bt2nuon_pico_w Bluetooth Nuon
 APP_bt2nuon_pico2_w := pico2_w bt2nuon bt2nuon_pico2_w Bluetooth Nuon
 APP_bt2n64_pico_w := pico_w bt2n64 bt2n64_pico_w Bluetooth N64
@@ -444,6 +447,8 @@ help:
 	@echo "  make universal_makerdiary_nrf52840 - GPIO/BLE -> USB HID (Makerdiary MDK USB Dongle)"
 	@echo "  make flash-universal_makerdiary_nrf52840 - Flash Makerdiary MDK universal via UF2"
 	@echo "  make bt2loopy_pico_w    - Bluetooth -> Loopy (Pico W)"
+	@echo "  make bt2gameport_pico_w - Bluetooth -> PC Gameport (Pico W)"
+	@echo "  make bt2gameport_pico2_w - Bluetooth -> PC Gameport (Pico 2 W)"
 	@echo "  make bt2nuon_pico_w     - Bluetooth -> Nuon (Pico W)"
 	@echo "  make bt2n64_pico_w      - Bluetooth -> N64 (Pico W)"
 	@echo "  make wifi2usb_pico_w    - WiFi -> USB HID (Pico W)"
@@ -815,6 +820,14 @@ bt2usb_waveshare_rp2350b_plus_w:
 .PHONY: bt2loopy_pico_w
 bt2loopy_pico_w:
 	$(call build_app,bt2loopy_pico_w)
+
+.PHONY: bt2gameport_pico_w
+bt2gameport_pico_w:
+	$(call build_app,bt2gameport_pico_w)
+
+.PHONY: bt2gameport_pico2_w
+bt2gameport_pico2_w:
+	$(call build_app,bt2gameport_pico2_w)
 
 .PHONY: bt2nuon_pico_w
 bt2nuon_pico_w:
@@ -1778,6 +1791,10 @@ flash-bt2usb_waveshare_rp2350b_plus_w:
 .PHONY: flash-bt2loopy_pico_w
 flash-bt2loopy_pico_w:
 	@$(MAKE) --no-print-directory _flash_app APP_NAME=bt2loopy_pico_w
+
+.PHONY: flash-bt2gameport_pico_w
+flash-bt2gameport_pico_w:
+	@$(MAKE) --no-print-directory _flash_app APP_NAME=bt2gameport_pico_w
 
 .PHONY: flash-bt2nuon_pico_w
 flash-bt2nuon_pico_w:

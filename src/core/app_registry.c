@@ -75,6 +75,9 @@ const char* app_registry_output_target_name(output_target_t target)
         case OUTPUT_TARGET_BLE_PERIPHERAL: return "ble_peripheral";
         case OUTPUT_TARGET_UART:           return "uart";
         case OUTPUT_TARGET_WII_EXTENSION:  return "wii_extension";
+        case OUTPUT_TARGET_AMIGA:          return "amiga";
+        case OUTPUT_TARGET_REMOTE_PLAY:    return "remote_play";
+        case OUTPUT_TARGET_GAMEPORT:       return "gameport";
         case OUTPUT_TARGET_COUNT:          break;
     }
     return "unknown";

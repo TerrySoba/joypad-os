@@ -1837,6 +1837,56 @@ if (PICO_BOARD STREQUAL "pico_w" OR
     pico_enable_stdio_uart(joypad_bt2loopy 1)
     pico_generate_pio_header(joypad_bt2loopy ${CMAKE_CURRENT_LIST_DIR}/native/device/loopy/loopy.pio)
 
+    # --- BT to PC Gameport (Pico W / Pico 2 W built-in Bluetooth -> 15-pin game port) ---
+    # BT2Gameport PCB: MCP4352 rheostat on SPI0 (GP2/3/5) for the 4 axes,
+    # BSS138 button drivers on GP16-19, user button GP22, status LED GP26.
+    add_executable(joypad_bt2gameport)
+    target_compile_definitions(joypad_bt2gameport PRIVATE
+        CONFIG_BT2GAMEPORT=1
+        DISABLE_USB_HOST=1
+        CONFIG_NO_NEOPIXEL=1
+        BUTTON_USER_GPIO=22
+        CYW43_LWIP=0
+        BTSTACK_USE_CYW43=1
+        ENABLE_BTSTACK=1
+        CONFIG_BT_HOST=1  # register BT-HID drivers (see #188 regression)
+    )
+    target_sources(joypad_bt2gameport PUBLIC
+        ${CORE_SOURCES}
+        ${BTHID_DEVICE_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/usb/usbh/hid/devices/generic/hid_parser.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/btstack/btstack_host.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/btstack/bt_device_db.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/transport/bt_transport.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/transport/bt_transport_cyw43.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/native/device/gameport/mcp4352.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/native/device/gameport/gameport_device.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/bt2gameport/app.c
+    )
+    target_include_directories(joypad_bt2gameport PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/apps/bt2gameport
+        ${CMAKE_CURRENT_SOURCE_DIR}/native/device/gameport
+        ${CMAKE_CURRENT_SOURCE_DIR}/usb/usbd
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/btstack
+        ${CMAKE_CURRENT_SOURCE_DIR}/bt/bthid
+        ${BTSTACK_INCLUDES}
+    )
+    target_link_libraries(joypad_bt2gameport PRIVATE
+        pico_stdlib
+        pico_multicore
+        pico_rand
+        hardware_spi
+        hardware_flash
+        pico_cyw43_arch_poll
+        pico_btstack_ble
+        pico_btstack_classic
+        pico_btstack_cyw43
+    )
+    joypad_target_common(joypad_bt2gameport)
+    pico_enable_stdio_usb(joypad_bt2gameport 1)
+    pico_enable_stdio_uart(joypad_bt2gameport 1)
+
     # --- BT to N64 (Pico W / Pico 2 W built-in Bluetooth -> N64 Console) ---
     add_executable(joypad_bt2n64)
     target_compile_definitions(joypad_bt2n64 PRIVATE
